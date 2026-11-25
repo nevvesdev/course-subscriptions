@@ -3,6 +3,18 @@ spring:
     name: course-subscriptions
   lifecycle:
     timeout-per-shutdown-phase: 20s
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${POSTGRES_DB:coursesubs}
+    username: ${POSTGRES_USER:coursesubs}
+    password: ${POSTGRES_PASSWORD:coursesubs}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
 
 server:
   port: 8080
