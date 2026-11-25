@@ -47,9 +47,13 @@ Detalhes e justificativas em [`docs/adr`](docs/adr).
 
 ## Como executar
 
-Pré-requisitos: JDK 21.
+Pré-requisitos: JDK 21 e Docker com `docker-compose`.
 
 ```bash
+# 1. sobe o PostgreSQL (valores padrão de desenvolvimento, sem precisar de .env)
+docker-compose up -d
+
+# 2. sobe a aplicação
 ./mvnw spring-boot:run
 ```
 
@@ -59,9 +63,15 @@ Verificação de saúde:
 curl http://localhost:8080/actuator/health
 ```
 
-Variáveis de ambiente: copie `.env.example` para `.env` e preencha (nunca versione o `.env`).
+Variáveis de ambiente: veja `.env.example`. Copie para `.env` apenas se quiser sobrescrever
+os padrões (nunca versione o `.env`).
+
+Para derrubar o banco: `docker-compose down` (acrescente `-v` para apagar os dados).
 
 ## Como executar os testes
+
+Requer Docker em execução: os testes de integração sobem um PostgreSQL descartável via
+Testcontainers e aplicam as migrations reais.
 
 ```bash
 ./mvnw verify
@@ -70,7 +80,7 @@ Variáveis de ambiente: copie `.env.example` para `.env` e preencha (nunca versi
 ## Roadmap
 
 - [x] **Fase 0:** scaffold, ADRs iniciais, estrutura em camadas e CI
-- [ ] **Fase 1:** Docker Compose, PostgreSQL, Flyway e primeiro teste de integração
+- [x] **Fase 1:** Docker Compose, PostgreSQL, Flyway e primeiro teste de integração
 - [ ] **Fase 2:** usuários, autenticação e catálogo de planos
 - [ ] **Fase 3:** Checkout Session e assinatura pendente
 - [ ] **Fase 4:** webhook com verificação de assinatura, idempotência e liberação de acesso
@@ -81,11 +91,12 @@ Variáveis de ambiente: copie `.env.example` para `.env` e preencha (nunca versi
 
 Esta seção é mantida desde o início, de propósito.
 
-- Ainda não há nenhuma funcionalidade de negócio implementada (Fase 0).
 - Não haverá frontend; a demonstração será via Swagger UI e Stripe CLI.
 - Autenticação será JWT simples, sem OAuth e sem refresh token.
 - O processamento do webhook será síncrono; processamento assíncrono com fila fica como evolução.
 - Apenas Stripe em modo teste; nenhum dinheiro real é movimentado.
+- Os testes de integração exigem Docker em execução.
+- Ainda não há funcionalidades de negócio, apenas a infraestrutura de persistência.
 
 ## Desenvolvido por
 
